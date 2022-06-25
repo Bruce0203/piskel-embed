@@ -1,0 +1,3 @@
+[submodule "kdash"]
+	path = kdash
+	url = https://github.com/Bruce0203/kdash
