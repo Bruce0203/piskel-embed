@@ -12,14 +12,13 @@
     rawFile.send(null);
   }
 
-
   var init = function () {
     var sidebarEl = document.querySelector(".sidebar");
     sidebarEl.addEventListener("click", function (evt) {
       var spriteName = evt.target.dataset.sprite;
       // loadSprite(sprites[spriteName])
 
-      readTextFile("kdash/" + spriteName + ".piskel", function(text){
+      readTextFile(toPiskelDir(spriteName), function(text){
         text = JSON.parse(text)
         loadSprite(text);
       });        
