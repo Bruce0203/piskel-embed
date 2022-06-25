@@ -6,6 +6,16 @@ const app = express()
 const router = express.Router();
 
 let LiveReloadExpress = require("livereload-express")(app);
+
+app.get("/", (req, res) => {
+  var addingHtml = ""
+  fs.readdirSync("kdash").forEach((filename) => {
+      addingHtml = addingHtml + '<li id="button" class="sidebar-menuitem" data-sprite="' + filename + '">' + filename + '</li>'
+  });
+  let html = fs.readFileSync("index.html", 'utf8');
+  html = html.replace("<!-- buttons -->", addingHtml)
+  res.send(html)
+})
 app.use(LiveReloadExpress.static(__dirname));
 app.use(express.json())
 
@@ -26,6 +36,7 @@ router.post("/", (req, res) => {
     fs.writeFileSync('kdash/' + jsonResult.piskel.name + ".piskel", data);
     console.log("---------------------------------------------------")
 });
+
   
   LiveReloadExpress.listen(port, () =>
   console.log(
