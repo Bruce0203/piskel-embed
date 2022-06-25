@@ -1,3 +1,6 @@
+const your_assets_dir = "kdash"
+
+
 const fs = require('fs')
   // We can add the modules we imported from NPM using require
 const express = require('express');
@@ -9,7 +12,7 @@ let LiveReloadExpress = require("livereload-express")(app);
 
 app.get("/", (req, res) => {
   var addingHtml = ""
-  fs.readdirSync("kdash").forEach((filename) => {
+  fs.readdirSync(your_assets_dir).forEach((filename) => {
       addingHtml = addingHtml + '<li id="button" class="sidebar-menuitem" data-sprite="' + filename + '">' + filename + '</li>'
   });
   let html = fs.readFileSync("index.html", 'utf8');
@@ -33,7 +36,7 @@ router.post("/", (req, res) => {
     console.log("---------------------------------------------------")
     let jsonResult = res.json({requestBody: req.body}).req.body
     let data = JSON.stringify(jsonResult)
-    fs.writeFileSync('kdash/' + jsonResult.piskel.name + ".piskel", data);
+    fs.writeFileSync(your_assets_dir + '/' + jsonResult.piskel.name + ".piskel", data);
     console.log("---------------------------------------------------")
 });
 

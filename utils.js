@@ -1,3 +1,5 @@
+const your_assets_dir = "kdash"
+
 const toPiskelDir = (name) => {
-    return "kdash/" + name + ".piskel"
+    return your_assets_dir + "/" + name + ".piskel"
 }

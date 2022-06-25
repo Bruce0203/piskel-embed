@@ -1,7 +1,6 @@
 
 console.log("uploaded sucessfully")
 console.log("----------------------------------------")
-// let piskelFileName = toPiskelDir(button.getAttribute("data-sprite"))
 let piskelKeys = JSON.parse(localStorage.getItem("piskel.keys"));
 if (piskelKeys != null && piskelKeys != undefined) piskelKeys.forEach((psklFile => {
     console.log("uploading " + psklFile.name + " now...")
