@@ -6,7 +6,6 @@
     "json": "^11.0.0",
     "livereload": "^0.9.3",
     "livereload-express": "^1.0.3",
-    "node": "^18.4.0",
     "xhr": "^2.6.0"
   },
   "name": "piskel-embed",

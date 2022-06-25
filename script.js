@@ -1,4 +1,7 @@
+
 (function () {  
+
+
 
   function readTextFile(file, callback) {
     var rawFile = new XMLHttpRequest();
@@ -14,6 +17,8 @@
 
   var init = function () {
     var sidebarEl = document.querySelector(".sidebar");
+
+
     sidebarEl.addEventListener("click", function (evt) {
       var spriteName = evt.target.dataset.sprite;
       // loadSprite(sprites[spriteName])
