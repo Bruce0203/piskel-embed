@@ -1,4 +1,5 @@
 const your_assets_dir = "piskel"
+const exported_assets_dir = "src/assets"
 
 
 const fs = require('fs')
@@ -55,11 +56,11 @@ router.post("/", (req, res) => {
 var exec = require('child_process').exec;
 async function piskelExportImage() {
   console.log("start piskel export")
-  execSync(`rm -r -f ${__dirname.replace("piskel-embed", "")}assets/`);
+  execSync(`rm -r -f ${__dirname.replace("piskel-embed", "")}${exported_assets_dir}/`);
   fs.readdirSync(your_assets_dir).forEach((filename) => {
     if (filename.indexOf(".piskel") == -1) return
     let srcFile = `/${__dirname.replace("piskel-embed", "")}/${your_assets_dir}/${filename.replace("piskel-embed", "")}`
-    let outFile = `/${__dirname.replace("piskel-embed", "")}/assets/${filename.replace(".piskel", "")}`
+    let outFile = `/${__dirname.replace("piskel-embed", "")}/${exported_assets_dir}/${filename.replace(".piskel", "")}`
     let srcJson = JSON.parse(fs.readFileSync(srcFile, 'utf8'))
     console.log(srcJson)
     let width = srcJson.piskel.width
