@@ -1,4 +1,3 @@
-
 (function () {  
 
 
@@ -23,6 +22,7 @@
       var spriteName = evt.target.dataset.sprite;
       // loadSprite(sprites[spriteName])
 
+      console.log(toPiskelDir(spriteName))
       readTextFile(toPiskelDir(spriteName), function(text){
         text = JSON.parse(text)
         loadSprite(text);
@@ -30,6 +30,11 @@
       
     });
   };
+
+
+  const toPiskelDir = (name) => {
+    return name + ".piskel"
+  }
 
   var loadSprite = function (sprite) {
     var editorFrameEl = document.querySelector(".editor-frame");

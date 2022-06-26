@@ -1,5 +1,2 @@
-const your_assets_dir = "kdash"
+const your_assets_dir = "piskel"
 
-const toPiskelDir = (name) => {
-    return your_assets_dir + "/" + name + ".piskel"
-}

@@ -1,4 +1,4 @@
-const your_assets_dir = "kdash"
+const your_assets_dir = "piskel"
 
 
 const fs = require('fs')
@@ -13,16 +13,18 @@ const router = express.Router();
 let LiveReloadExpress = require("livereload-express")(app);
 
 app.get("/", (req, res) => {
+  console.log("asdf")
   var addingHtml = ""
-  fs.readdirSync(your_assets_dir).forEach((filename) => {
+  fs.readdirSync(__dirname.replace("piskel-embed", "") + "/" + your_assets_dir).forEach((filename) => {
       addingHtml = addingHtml + '<li id="button" class="sidebar-menuitem" data-sprite="' + filename.replace(".piskel", "") + '">' + filename.replace(".piskel", "") + '</li>'
   });
-  let html = fs.readFileSync("index.html", 'utf8');
+  let html = fs.readFileSync(__dirname + "/index.html", 'utf8');
   html = html.replace("<!-- buttons -->", addingHtml)
   res.send(html)
   piskelExportImage()
 })
 app.use(LiveReloadExpress.static(__dirname));
+app.use(LiveReloadExpress.static(__dirname.replace("piskel-embed", "") + "/" + your_assets_dir));
 app.use(express.json())
 
 
@@ -56,7 +58,7 @@ async function piskelExportImage() {
   execSync(`rm -r -f ${__dirname.replace("piskel-embed", "")}assets/`);
   fs.readdirSync(your_assets_dir).forEach((filename) => {
     if (filename.indexOf(".piskel") == -1) return
-    let srcFile = `/${__dirname}/${your_assets_dir}/${filename}`
+    let srcFile = `/${__dirname.replace("piskel-embed", "")}/${your_assets_dir}/${filename.replace("piskel-embed", "")}`
     let outFile = `/${__dirname.replace("piskel-embed", "")}/assets/${filename.replace(".piskel", "")}`
     let srcJson = JSON.parse(fs.readFileSync(srcFile, 'utf8'))
     console.log(srcJson)
@@ -71,7 +73,7 @@ async function piskelExportImage() {
       width = exportSize
       height = exportSize
     }
-    let cmd = `cd piskel-cli ; node index.js '${srcFile}' --pixiMovie --output '${outFile}' --scaledWidth ${width} --scaledHeight ${height}`
+    let cmd = `cd piskel-embed/piskel-cli ; node index.js '${srcFile}' --pixiMovie --output '${outFile}' --scaledWidth ${width} --scaledHeight ${height}`
     console.log(`cmd:${cmd}`)
     execSync(cmd,
     function (error, stdout, stderr) {});
