@@ -5,6 +5,7 @@ const fs = require('fs')
   // We can add the modules we imported from NPM using require
 const express = require('express');
 const { Console } = require('console');
+const { execSync } = require('child_process');
 const app = express()
 const router = express.Router();
 
@@ -51,11 +52,46 @@ router.post("/", (req, res) => {
 var exec = require('child_process').exec;
 async function piskelExportImage() {
   console.log("start piskel export")
+  execSync(`rm -r ${__dirname.replace("piskel-embed", "")}assets/`);
   fs.readdirSync(your_assets_dir).forEach((filename) => {
     if (filename.indexOf(".piskel") == -1) return
-    console.log(`cd piskel-cli || node index.js /${__dirname}/${your_assets_dir}/${filename} --pixiMovie true --output /${__dirname.replace("piskel-embed", "")}/assets/${filename.replace(".piskel", "")} --scaledWidth 512 --scaledHeight 512`)
-    exec(`cd piskel-cli ; node index.js /${__dirname}/${your_assets_dir}/${filename} --pixiMovie true --output /${__dirname.replace("piskel-embed", "")}/assets/${filename.replace(".piskel", "")} --scaledWidth 512 --scaledHeight 512`,
-    function (error, stdout, stderr) {
-    });
+    let srcFile = `/${__dirname}/${your_assets_dir}/${filename}`
+    let outFile = `/${__dirname.replace("piskel-embed", "")}/assets/${filename.replace(".piskel", "")}`
+    execSync(`cd piskel-cli ; node index.js ${srcFile} --pixiMovie --output ${outFile}`,
+    function (error, stdout, stderr) {});
+    let srcJson = JSON.parse(fs.readFileSync(srcFile, 'utf8'))
+    let jsonOut = JSON.parse(fs.readFileSync(outFile + '.json', 'utf8'))
+    console.log(srcJson)
+    let width = srcJson.piskel.width
+    let height = srcJson.piskel.height
+    let frameCount = Object.keys(jsonOut.frames).length
+    let sqrted = Math.floor(Math.sqrt(frameCount))
+    if (frameCount <= 1) sqrted = 1
+    let x = 0, y = 0
+    console.log(jsonOut)
+
+    for (let f in jsonOut.frames) {
+      f = jsonOut.frames[f]
+      console.log(f)
+      let rectFunc = (a) => {
+        a.x = x * width
+        a.y = y * height
+        a.w = width 
+        a.h = height 
+      }
+      rectFunc(f.frame)
+      rectFunc(f.spriteSourceSize)
+      f.sourceSize.w = width
+      f.sourceSize.h = height
+      y++
+      if (y >= sqrted) {
+        y = 0
+        x++
+      }
+    }
+    jsonOut.meta.size = {"w": width*sqrted, "h": height*sqrted}
+    // jsonOut.width = srcJson.piskel.width
+    fs.writeFileSync(outFile + '.json', JSON.stringify(jsonOut))
+    
   });
 }

@@ -118,7 +118,6 @@ if (args.pixiMovie) {
         if (filename.indexOf('.png') > -1) {
             zip.file(path.basename(filename), fs.readFileSync(options.output + '.png'), { binary: true });
         } else {
-            zip.file(path.basename(filename), fs.readFileSync(filename));
             fs.writeFileSync(options.output + ".json", fs.readFileSync(filename), 'utf-8');
             fs.unlinkSync(filename);
         }
