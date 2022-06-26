@@ -6,6 +6,7 @@ const fs = require('fs')
 const express = require('express');
 const { Console } = require('console');
 const { execSync } = require('child_process');
+const exp = require('constants');
 const app = express()
 const router = express.Router();
 
@@ -52,18 +53,29 @@ router.post("/", (req, res) => {
 var exec = require('child_process').exec;
 async function piskelExportImage() {
   console.log("start piskel export")
-  execSync(`rm -r ${__dirname.replace("piskel-embed", "")}assets/`);
+  execSync(`rm -r -f ${__dirname.replace("piskel-embed", "")}assets/`);
   fs.readdirSync(your_assets_dir).forEach((filename) => {
     if (filename.indexOf(".piskel") == -1) return
     let srcFile = `/${__dirname}/${your_assets_dir}/${filename}`
     let outFile = `/${__dirname.replace("piskel-embed", "")}/assets/${filename.replace(".piskel", "")}`
-    execSync(`cd piskel-cli ; node index.js ${srcFile} --pixiMovie --output ${outFile}`,
-    function (error, stdout, stderr) {});
     let srcJson = JSON.parse(fs.readFileSync(srcFile, 'utf8'))
-    let jsonOut = JSON.parse(fs.readFileSync(outFile + '.json', 'utf8'))
     console.log(srcJson)
     let width = srcJson.piskel.width
     let height = srcJson.piskel.height
+    let hasDescribedExportSize = !isNaN(srcJson.piskel.description)
+
+    console.log("hasDescribedExportSize: " + hasDescribedExportSize)
+    console.log("<" + srcJson.piskel.description + ">")
+    if (hasDescribedExportSize) {
+      let exportSize = parseInt(srcJson.piskel.description)
+      width = exportSize
+      height = exportSize
+    }
+    let cmd = `cd piskel-cli ; node index.js '${srcFile}' --pixiMovie --output '${outFile}' --scaledWidth ${width} --scaledHeight ${height}`
+    console.log(`cmd:${cmd}`)
+    execSync(cmd,
+    function (error, stdout, stderr) {});
+    let jsonOut = JSON.parse(fs.readFileSync(outFile + '.json', 'utf8'))
     let frameCount = Object.keys(jsonOut.frames).length
     let sqrted = Math.floor(Math.sqrt(frameCount))
     if (frameCount <= 1) sqrted = 1
