@@ -69,7 +69,7 @@ async function piskelExportImage(exportFileName) {
     console.log(srcJson)
     let width = srcJson.piskel.width
     let height = srcJson.piskel.height
-    let hasDescribedExportSize = !isNaN(srcJson.piskel.description)
+    let hasDescribedExportSize = srcJson.piskel.description.length != 0
 
     console.log("hasDescribedExportSize: " + hasDescribedExportSize)
     console.log("<" + srcJson.piskel.description + ">")
@@ -77,8 +77,12 @@ async function piskelExportImage(exportFileName) {
       let exportSize = parseInt(srcJson.piskel.description)
       width = exportSize
       height = exportSize
+    } else {
+      width = parseInt(srcJson.piskel.width)
+      height = parseInt(srcJson.piskel.height)
     }
-    let cmd = `cd piskel-embed/piskel-cli ; node index.js '${srcFile}' --pixiMovie --output '${outFile}' --scaledWidth ${width} --scaledHeight ${height}`
+    let extraArg = hasDescribedExportSize ? `--scaledWidth ${width} --scaledHeight ${height}` : ""
+    let cmd = `cd piskel-embed/piskel-cli ; node index.js '${srcFile}' --pixiMovie --output '${outFile}' ${extraArg}`
     console.log(`cmd:${cmd}`)
     execSync(cmd,
     function (error, stdout, stderr) {});
