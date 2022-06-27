@@ -13,7 +13,7 @@ const router = express.Router();
 
 let LiveReloadExpress = require("livereload-express")(app);
 
-app.get("/", (req, res) => {
+app.get("/tool", (req, res) => {
   console.log("asdf")
   var addingHtml = ""
   fs.readdirSync(__dirname.replace("piskel-embed", "") + "/" + your_assets_dir).forEach((filename) => {
@@ -22,8 +22,8 @@ app.get("/", (req, res) => {
   let html = fs.readFileSync(__dirname + "/index.html", 'utf8');
   html = html.replace("<!-- buttons -->", addingHtml)
   res.send(html)
-  piskelExportImage()
 })
+app.use(LiveReloadExpress.static(__dirname.replace("piskel-embed", "") + "/" + "src"));
 app.use(LiveReloadExpress.static(__dirname));
 app.use(LiveReloadExpress.static(__dirname.replace("piskel-embed", "") + "/" + your_assets_dir));
 app.use(express.json())
@@ -43,6 +43,7 @@ router.post("/", (req, res) => {
     let jsonResult = res.json({requestBody: req.body}).req.body
     let data = JSON.stringify(jsonResult)
     fs.writeFileSync(your_assets_dir + '/' + jsonResult.piskel.name + ".piskel", data);
+    piskelExportImage(jsonResult.piskel.name)
     console.log("---------------------------------------------------")
 });
 
@@ -54,10 +55,13 @@ router.post("/", (req, res) => {
 );
 
 var exec = require('child_process').exec;
-async function piskelExportImage() {
+async function piskelExportImage(exportFileName) {
   console.log("start piskel export")
-  execSync(`rm -r -f ${__dirname.replace("piskel-embed", "")}${exported_assets_dir}/`);
-  fs.readdirSync(your_assets_dir).forEach((filename) => {
+  let filename = exportFileName + ".piskel"
+  let execSyncDir = `${__dirname.replace("piskel-embed", "")}/${exported_assets_dir}/`
+  execSync(`rm -r -f ${execSyncDir}${exportFileName}.json`);
+  execSync(`rm -r -f ${execSyncDir}${exportFileName}.png`);
+  {
     if (filename.indexOf(".piskel") == -1) return
     let srcFile = `/${__dirname.replace("piskel-embed", "")}/${your_assets_dir}/${filename.replace("piskel-embed", "")}`
     let outFile = `/${__dirname.replace("piskel-embed", "")}/${exported_assets_dir}/${filename.replace(".piskel", "")}`
@@ -80,7 +84,7 @@ async function piskelExportImage() {
     function (error, stdout, stderr) {});
     let jsonOut = JSON.parse(fs.readFileSync(outFile + '.json', 'utf8'))
     let frameCount = Object.keys(jsonOut.frames).length
-    let sqrted = Math.floor(Math.sqrt(frameCount))
+    let sqrted = Math.ceil(Math.sqrt(frameCount))
     if (frameCount <= 1) sqrted = 1
     let x = 0, y = 0
     console.log(jsonOut)
@@ -108,5 +112,5 @@ async function piskelExportImage() {
     // jsonOut.width = srcJson.piskel.width
     fs.writeFileSync(outFile + '.json', JSON.stringify(jsonOut))
     
-  });
+  }
 }

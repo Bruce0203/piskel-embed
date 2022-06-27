@@ -28,7 +28,7 @@
   <!-- do not delete, do not move :) -->
   <!--body-main-start-->
   <div id="main-wrapper" class="main-wrapper">
-    <iframe src="templates/drawing-tools.html" onload="iframeloader.onLoad(event)" data-iframe-loader="display"></iframe>
+    <iframe id = "drawing-tools" src="templates/drawing-tools.html" onload="iframeloader.onLoad(event)" data-iframe-loader="display"></iframe>
 
     <div id="column-wrapper" class="column-wrapper">
       <div class='column left-column'>
@@ -52,12 +52,12 @@
 
     <div id="application-action-section" data-pskl-controller="settings" class="sticky-section right-sticky-section">
       <div class="sticky-section-wrap">
-        <iframe src="templates/settings.html" onload="iframeloader.onLoad(event)" data-iframe-loader="display"></iframe>
+        <iframe id="settings" src="templates/settings.html" onload="iframeloader.onLoad(event)" data-iframe-loader="display"></iframe>
         <div class="drawer vertical-centerer">
           <div class="drawer-content" id="drawer-container">
             <iframe src="templates/settings/application.html" onload="iframeloader.onLoad(event)" data-iframe-loader="store"></iframe>
             <iframe src="templates/settings/resize.html" onload="iframeloader.onLoad(event)" data-iframe-loader="store"></iframe>
-            <iframe src="templates/settings/save.html" onload="iframeloader.onLoad(event)"  data-iframe-loader="store"></iframe>
+            <iframe id="save-button" src="templates/settings/save.html" onload="iframeloader.onLoad(event)"  data-iframe-loader="store"></iframe>
             <iframe src="templates/settings/import.html" onload="iframeloader.onLoad(event)"  data-iframe-loader="store"></iframe>
             <iframe src="templates/settings/export.html" onload="iframeloader.onLoad(event)"  data-iframe-loader="store"></iframe>
           </div>

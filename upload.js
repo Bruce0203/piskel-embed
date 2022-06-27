@@ -1,5 +1,14 @@
+document.addEventListener('piskelSaved', function() {
+    saveMyPiskel()
+    console.log("save piskel files")
+ });
+ 
 
-console.log("uploaded sucessfully")
+
+function saveMyPiskel(){
+
+
+    console.log("uploaded sucessfully")
 console.log("----------------------------------------")
 let piskelKeys = JSON.parse(localStorage.getItem("piskel.keys"));
 if (piskelKeys != null && piskelKeys != undefined) piskelKeys.forEach((psklFile => {
@@ -21,4 +30,4 @@ if (piskelKeys != null && piskelKeys != undefined) piskelKeys.forEach((psklFile 
     }
     localStorage.setItem("piskel.keys", JSON.stringify(piskelKeys))
     localStorage.removeItem(psklFile.name + ".piskel")
-}))
+}))}
